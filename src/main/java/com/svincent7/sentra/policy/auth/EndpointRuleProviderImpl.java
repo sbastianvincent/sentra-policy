@@ -1,6 +1,6 @@
 package com.svincent7.sentra.policy.auth;
 
-import com.svincent7.sentra.common.auth.Permission;
+import com.svincent7.sentra.common.policy.Action;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRule;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRuleProvider;
 import org.springframework.http.HttpMethod;
@@ -17,7 +17,7 @@ public class EndpointRuleProviderImpl implements EndpointRuleProvider {
         return List.of(
             new EndpointRule(HttpMethod.GET, "/actuator/**",
                     Set.of(
-                            EndpointRuleProvider.SCOPE_PREFIX + Permission.ACTUATOR_GET_ALL.getPermission()
+                            EndpointRuleProvider.SCOPE_PREFIX + Action.ACTUATOR_GET_ALL.getPermission()
                     ))
         );
     }

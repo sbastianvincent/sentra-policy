@@ -1,6 +1,6 @@
 package com.svincent7.sentra.policy.config;
 
-import com.svincent7.sentra.common.auth.Permission;
+import com.svincent7.sentra.common.policy.Action;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRule;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRuleProvider;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .username("monitoring.lab.svincent7.com")
                 .password("noop-password")
                 .authorities(
-                    EndpointRuleProvider.SCOPE_PREFIX + Permission.ACTUATOR_GET_ALL.getPermission()
+                    EndpointRuleProvider.SCOPE_PREFIX + Action.ACTUATOR_GET_ALL.getPermission()
                 )
                 .build();
 
