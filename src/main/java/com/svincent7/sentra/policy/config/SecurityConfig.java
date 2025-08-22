@@ -1,7 +1,7 @@
 package com.svincent7.sentra.policy.config;
 
+import com.svincent7.sentra.common.auth.SentraUserDetailsServiceImpl;
 import com.svincent7.sentra.common.auth.SpiffeSanPrincipalExtractor;
-import com.svincent7.sentra.common.policy.action.Action;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRule;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRuleProvider;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +13,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestOperations;
 
@@ -49,35 +46,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails monitoring = User.builder()
-                .username("ns/homelab/sa/monitoring")
-                .password("noop-password")
-                .authorities(
-                        EndpointRuleProvider.SCOPE_PREFIX + Action.ACTUATOR_GET_ALL.getPermission()
-                )
-                .build();
-        UserDetails kms = User.builder()
-                .username("ns/homelab/sa/kms")
-                .password("noop-password")
-                .build();
-        UserDetails vault = User.builder()
-                .username("ns/homelab/sa/vault")
-                .password("noop-password")
-                .build();
-        UserDetails audit = User.builder()
-                .username("ns/homelab/sa/audit")
-                .password("noop-password")
-                .build();
-        UserDetails policy = User.builder()
-                .username("ns/homelab/sa/policy")
-                .password("noop-password")
-                .build();
-        UserDetails iam = User.builder()
-                .username("ns/homelab/sa/iam")
-                .password("noop-password")
-                .build();
-
-        return new InMemoryUserDetailsManager(monitoring, kms, vault, audit, policy, iam);
+        return new SentraUserDetailsServiceImpl().getUserDetailsService();
     }
 
     @Bean
