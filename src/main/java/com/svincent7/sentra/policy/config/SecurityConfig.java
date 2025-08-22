@@ -1,5 +1,6 @@
 package com.svincent7.sentra.policy.config;
 
+import com.svincent7.sentra.common.auth.SpiffeSanPrincipalExtractor;
 import com.svincent7.sentra.common.policy.action.Action;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRule;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRuleProvider;
@@ -39,9 +40,9 @@ public class SecurityConfig {
                     }
                     auth.anyRequest().authenticated();
                 })
-                .x509(x509 -> {
-                    x509.subjectPrincipalRegex("CN=(.*?)(?:,|$)").userDetailsService(userDetailsService());
-                });
+                .x509(x509 -> x509
+                        .x509PrincipalExtractor(new SpiffeSanPrincipalExtractor())
+                        .userDetailsService(userDetailsService()));
 
         return httpSecurity.build();
     }
