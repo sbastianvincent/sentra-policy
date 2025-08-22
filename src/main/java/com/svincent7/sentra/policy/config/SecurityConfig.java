@@ -49,14 +49,34 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails monitoring = User.builder()
-                .username("monitoring.lab.svincent7.com")
+                .username("ns/homelab/sa/monitoring")
                 .password("noop-password")
                 .authorities(
-                    EndpointRuleProvider.SCOPE_PREFIX + Action.ACTUATOR_GET_ALL.getPermission()
+                        EndpointRuleProvider.SCOPE_PREFIX + Action.ACTUATOR_GET_ALL.getPermission()
                 )
                 .build();
+        UserDetails kms = User.builder()
+                .username("ns/homelab/sa/kms")
+                .password("noop-password")
+                .build();
+        UserDetails vault = User.builder()
+                .username("ns/homelab/sa/vault")
+                .password("noop-password")
+                .build();
+        UserDetails audit = User.builder()
+                .username("ns/homelab/sa/audit")
+                .password("noop-password")
+                .build();
+        UserDetails policy = User.builder()
+                .username("ns/homelab/sa/policy")
+                .password("noop-password")
+                .build();
+        UserDetails iam = User.builder()
+                .username("ns/homelab/sa/iam")
+                .password("noop-password")
+                .build();
 
-        return new InMemoryUserDetailsManager(monitoring);
+        return new InMemoryUserDetailsManager(monitoring, kms, vault, audit, policy, iam);
     }
 
     @Bean
