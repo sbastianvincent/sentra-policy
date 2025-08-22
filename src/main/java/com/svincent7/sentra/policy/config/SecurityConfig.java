@@ -1,6 +1,6 @@
 package com.svincent7.sentra.policy.config;
 
-import com.svincent7.sentra.common.policy.Action;
+import com.svincent7.sentra.common.policy.action.Action;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRule;
 import com.svincent7.sentra.common.auth.endpoint.EndpointRuleProvider;
 import lombok.RequiredArgsConstructor;
