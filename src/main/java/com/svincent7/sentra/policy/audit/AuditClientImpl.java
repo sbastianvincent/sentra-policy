@@ -11,9 +11,9 @@ public class AuditClientImpl implements AuditClient {
     private final RestOperations restOperations;
     private final AuditClientConfig auditClientConfig;
 
-    public AuditClientImpl(final RestOperations restOperations, final AuditClientConfig auditClientConfig) {
-        this.restOperations = restOperations;
-        this.auditClientConfig = auditClientConfig;
+    public AuditClientImpl(final RestOperations restOps, final AuditClientConfig auditClient) {
+        this.restOperations = restOps;
+        this.auditClientConfig = auditClient;
     }
 
     @Override
