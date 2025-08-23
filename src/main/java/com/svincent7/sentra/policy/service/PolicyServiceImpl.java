@@ -4,9 +4,14 @@ import com.svincent7.sentra.common.audit.EventRequest;
 import com.svincent7.sentra.common.policy.AuthorizationDecision;
 import com.svincent7.sentra.common.policy.AuthorizationRequest;
 import com.svincent7.sentra.common.policy.AuthorizationResponse;
+import com.svincent7.sentra.common.policy.PolicyInformationResponse;
+import com.svincent7.sentra.common.policy.PolicyResponse;
 import com.svincent7.sentra.common.policy.context.ContextEnum;
 import com.svincent7.sentra.common.srn.SentraResourceNameParser;
 import com.svincent7.sentra.policy.audit.AuditClient;
+import com.svincent7.sentra.policy.service.evaluation.EvaluationResponse;
+import com.svincent7.sentra.policy.service.evaluation.PolicyEvaluationService;
+import com.svincent7.sentra.policy.service.information.PolicyInformationEndpointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +22,30 @@ import java.util.Map;
 public class PolicyServiceImpl implements PolicyService {
     private final SentraResourceNameParser sentraResourceNameParser;
     private final AuditClient auditClient;
+    private final PolicyInformationEndpointService policyInformationEndpointService;
+    private final PolicyEvaluationService policyEvaluationService;
 
     @Override
     public AuthorizationResponse authorizeRequest(final AuthorizationRequest request) {
+        PolicyInformationResponse policyInformationResponse = policyInformationEndpointService
+                .getPolicyInformation(request.getPrincipalSrn());
         AuthorizationResponse response = new AuthorizationResponse();
-        response.setDecision(AuthorizationDecision.GRANTED);
-        response.setMessage("GRANTED All Requests for now");
+        response.setDecision(AuthorizationDecision.DENY); // DENY By DEFAULT
+        response.setMessage("Policy not found");
+
+        for (PolicyResponse policy : policyInformationResponse.getPolicyInformation()) {
+            EvaluationResponse evaluationResponse = policyEvaluationService.evaluate(request, policy);
+            if (evaluationResponse == null || evaluationResponse.getDecision() == null) {
+                continue;
+            }
+            response.setDecision(evaluationResponse.getDecision());
+            response.setMessage(evaluationResponse.getMessage());
+
+            if (evaluationResponse.getDecision() == AuthorizationDecision.DENY) {
+                break;
+            }
+        }
+
         auditRecord(request, response);
         return response;
     }
