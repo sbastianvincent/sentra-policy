@@ -21,6 +21,9 @@ public class PolicyConfig implements ConfigProperties, AuditClientConfig {
 
     private String auditUrl;
 
+    private String stsAssumeRoleUrl;
+    private int defaultStsDurationMinutes;
+
     @Bean
     public SentraResourceNameParser sentraResourceNameParser() {
         return new SentraResourceNameParserImpl();

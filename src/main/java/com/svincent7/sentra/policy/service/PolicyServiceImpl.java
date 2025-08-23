@@ -30,16 +30,16 @@ public class PolicyServiceImpl implements PolicyService {
     private void auditRecord(final AuthorizationRequest request, final AuthorizationResponse response) {
         EventRequest eventRequest = new EventRequest();
 
-        Map<String, Object> context = request.getContext();
+        Map<String, String> context = request.getContext();
 
         eventRequest.setAccountId(sentraResourceNameParser.parseAccountId(request.getPrincipalSrn()));
-        eventRequest.setEventTime((Long) context.get(ContextEnum.REQUEST_TIME.name()));
+        eventRequest.setEventTime(Long.parseLong(context.get(ContextEnum.REQUEST_TIME.name())));
         eventRequest.setAction(request.getAction());
         eventRequest.setPrincipalSrn(request.getPrincipalSrn());
         eventRequest.setResourceSrn(request.getResourceSrn());
         eventRequest.setContext(request.getContext());
-        eventRequest.setSourceIp(context.get(ContextEnum.IP_ADDRESS.name()).toString());
-        eventRequest.setUserAgent(context.get(ContextEnum.USER_AGENT.name()).toString());
+        eventRequest.setSourceIp(context.get(ContextEnum.IP_ADDRESS.name()));
+        eventRequest.setUserAgent(context.get(ContextEnum.USER_AGENT.name()));
         eventRequest.setDecision(response.getDecision());
         eventRequest.setMessage(response.getMessage());
 
