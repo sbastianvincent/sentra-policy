@@ -22,7 +22,7 @@ public class PolicyEvaluationServiceImpl implements PolicyEvaluationService {
     @Override
     public EvaluationResult evaluate(final AuthorizationRequest request, final PolicyDocument policyDocument) {
         EvaluationResult response = new EvaluationResult();
-        for (Statement statement : policyDocument.getStatements()) {
+        for (Statement statement : policyDocument.getStatement()) {
             log.debug("Evaluating statement: {}", statement);
             if (evaluateStatement(statement, request)) {
                 if (statement.getEffect().equals(AuthorizationDecision.DENY.name())) {
@@ -31,6 +31,7 @@ public class PolicyEvaluationServiceImpl implements PolicyEvaluationService {
                     return response;
                 } else {
                     response.setDecision(AuthorizationDecision.GRANTED);
+                    log.debug("Granted by policy SID: {}", statement.getSid());
                 }
             }
         }
@@ -38,24 +39,24 @@ public class PolicyEvaluationServiceImpl implements PolicyEvaluationService {
     }
 
     private boolean evaluateStatement(final Statement statement, final AuthorizationRequest request) {
-        return matches(statement.getActions(), request.getAction())
-                && matches(statement.getResources(), request.getResourceSrn())
+        return matches(statement.getAction(), request.getAction())
+                && matches(statement.getResource(), request.getResourceSrn())
                 && matchesConditions(statement.getConditions(), request.getContext());
     }
 
-    private boolean matches(final List<String> policyActions, final String requestAction) {
-        if (policyActions == null || policyActions.isEmpty()) {
+    private boolean matches(final List<String> policies, final String request) {
+        if (policies == null || policies.isEmpty()) {
             return false;
         }
 
-        for (String policyAction : policyActions) {
-            if (policyAction.equals("*") || policyAction.equalsIgnoreCase(requestAction)) {
+        for (String policy : policies) {
+            if (policy.equals("*") || policy.equalsIgnoreCase(request)) {
                 return true;
             }
 
-            if (policyAction.contains("*")) {
-                String regex = policyAction.replace("*", ".*");
-                if (Pattern.matches(regex, requestAction)) {
+            if (policy.contains("*")) {
+                String regex = policy.replace("*", ".*");
+                if (Pattern.matches(regex, request)) {
                     return true;
                 }
             }

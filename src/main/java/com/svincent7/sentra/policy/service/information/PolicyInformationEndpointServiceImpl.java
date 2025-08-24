@@ -53,7 +53,6 @@ public class PolicyInformationEndpointServiceImpl implements PolicyInformationEn
             }
         }
 
-        log.debug("Policies: {}", policies);
         return policies;
     }
 }

@@ -12,6 +12,7 @@ import com.svincent7.sentra.policy.dto.PolicyDocument;
 import com.svincent7.sentra.policy.service.evaluation.PolicyEvaluationService;
 import com.svincent7.sentra.policy.service.information.PolicyInformationEndpointService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PolicyServiceImpl implements PolicyService {
     private final SentraResourceNameParser sentraResourceNameParser;
     private final AuditClient auditClient;
@@ -34,6 +36,7 @@ public class PolicyServiceImpl implements PolicyService {
         response.setMessage("No policy explicitly allows this request");
 
         for (PolicyDocument policy : policyDocuments) {
+            log.debug("evaluating: {}", policy);
             EvaluationResult evaluationResult = policyEvaluationService.evaluate(request, policy);
             if (evaluationResult == null || evaluationResult.getDecision() == null) {
                 continue;
