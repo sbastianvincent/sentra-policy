@@ -37,9 +37,9 @@ public class PolicyEvaluationServiceImpl implements PolicyEvaluationService {
     }
 
     private boolean evaluateStatement(final Statement statement, final AuthorizationRequest request) {
-        return matches(statement.getActions(), request.getAction()) &&
-                matches(statement.getResources(), request.getResourceSrn()) &&
-                matchesConditions(statement.getConditions(), request.getContext());
+        return matches(statement.getActions(), request.getAction())
+                && matches(statement.getResources(), request.getResourceSrn())
+                && matchesConditions(statement.getConditions(), request.getContext());
     }
 
     private boolean matches(final List<String> policyActions, final String requestAction) {

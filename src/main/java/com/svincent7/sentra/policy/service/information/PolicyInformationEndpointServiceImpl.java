@@ -29,7 +29,7 @@ public class PolicyInformationEndpointServiceImpl implements PolicyInformationEn
 
         final ResponseEntity<Set<PolicyResponse>> responseEntity = restOperations.exchange(
                 config.getPolicyInformationUrl() + "/" + principalSrn, HttpMethod.GET, null,
-                new ParameterizedTypeReference<>() {});
+                new ParameterizedTypeReference<>() { });
         Set<PolicyResponse> policyInformationResponse = responseEntity.getBody();
         if (policyInformationResponse == null) {
             return Set.of();
