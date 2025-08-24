@@ -31,6 +31,7 @@ public class PolicyInformationEndpointServiceImpl implements PolicyInformationEn
                 config.getPolicyInformationUrl() + "/" + principalSrn, HttpMethod.GET, null,
                 new ParameterizedTypeReference<>() { });
         Set<PolicyResponse> policyInformationResponse = responseEntity.getBody();
+        log.debug("Policy information response: {}", policyInformationResponse);
         if (policyInformationResponse == null) {
             return Set.of();
         }
@@ -52,6 +53,7 @@ public class PolicyInformationEndpointServiceImpl implements PolicyInformationEn
             }
         }
 
+        log.debug("Policies: {}", policies);
         return policies;
     }
 }

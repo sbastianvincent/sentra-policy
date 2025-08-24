@@ -23,6 +23,7 @@ public class PolicyEvaluationServiceImpl implements PolicyEvaluationService {
     public EvaluationResult evaluate(final AuthorizationRequest request, final PolicyDocument policyDocument) {
         EvaluationResult response = new EvaluationResult();
         for (Statement statement : policyDocument.getStatements()) {
+            log.debug("Evaluating statement: {}", statement);
             if (evaluateStatement(statement, request)) {
                 if (statement.getEffect().equals(AuthorizationDecision.DENY.name())) {
                     response.setDecision(AuthorizationDecision.DENY);
