@@ -1,7 +1,9 @@
 package com.svincent7.sentra.policy.service.information;
 
-import com.svincent7.sentra.common.policy.PolicyInformationResponse;
+import com.svincent7.sentra.policy.dto.PolicyDocument;
+
+import java.util.Set;
 
 public interface PolicyInformationEndpointService {
-    PolicyInformationResponse getPolicyInformation(String principalSrn);
+    Set<PolicyDocument> getPolicyInformation(String principalSrn);
 }
